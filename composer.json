@@ -1,0 +1,21 @@
+{
+    "name": "evodelavega/sendgrid-web",
+    "description": "A simple API wrapper, focussed on sendgrid's web api",
+    "license": "MIT",
+    "keywords": ["SendGrid", "sendgrid", "email", "web", "api", "statistics"],
+    "authors": [
+        {
+            "name": "Elias Van Ootegem",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0" : {
+            "SendGrid" : "src"
+        }
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "lib-curl": "*"
+    }
+}
