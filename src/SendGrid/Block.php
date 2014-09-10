@@ -101,7 +101,8 @@ class Block extends Api
         );
         return $this->callApi(
             'blocks.delete.'.$this->config->getOutput(),
-            $param
+            $param,
+            Api::CALL_POST
         );
     }
 

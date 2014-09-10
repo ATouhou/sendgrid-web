@@ -3,37 +3,24 @@
 namespace SendGrid;
 
 
-class Bounce extends Api
+class Invalid extends Api
 {
-
-    const BOUNCE_TYPE_SOFT = 'soft';
-    const BOUNCE_TYPE_HARD = 'hard';
-
     /**
      * @var array
      */
     protected static $AllParams = array(
-        'getBounces' => array(
+        'getInvalids' => array(
             'date'          => false,
             'days'          => false,
             'start_date'    => false,
             'end_date'      => false,
             'limit'         => false,
             'offset'        => false,
-            'type'          => false,
             'email'         => false
-        ),
-        'deleteBounce'      => array(
-            'start_date'    => false,
-            'end_date'      => false,
-            'type'          => false,
-            'email'         => false,
-            'delete_all'    => false
         ),
         'getCount'          => array(
             'start_date'    => false,
             'end_date'      => false,
-            'type'          => false
         )
     );
 
@@ -41,23 +28,22 @@ class Bounce extends Api
      * @var array
      */
     protected static $RequiredParams = array(
-        'getBounces'    => null,
-        'deleteBounce'  => null,
-        'getCount'      => null
+        'getInvalids' => null,
+        'getCount'  => null
     );
 
     /**
      * @param array $params
      * @return array
      */
-    public function getBounces(array $params = array())
+    public function getInvalids(array $params = array())
     {
         $params = $this->sanitizeParams(
             $params,
             __FUNCTION__
         );
         return $this->callApi(
-            'bounces.get.'.$this->config->getOutput(),
+            'invalidemails.get.'.$this->config->getOutput(),
             $params
         );
     }
@@ -75,7 +61,7 @@ class Bounce extends Api
             __FUNCTION__
         );
         $result = $this->callApi(
-            'bounces.count.'.$this->config->getOutput(),
+            'invalidemails.count.'.$this->config->getOutput(),
             $param
         );
         if ($returnValue === true) {
@@ -88,35 +74,40 @@ class Bounce extends Api
     }
 
     /**
-     * At least one argument is required!
-     * @param array $params
+     * @param string $email
      * @return array|mixed|null|\stdClass
      */
-    public function deleteBounce(array $params)
+    public function deleteEmail($email)
     {
-        $params = $this->sanitizeParams(
-            $params,
-            __FUNCTION__
+        $param = array(
+            'api_user'  => $this->config->getUser(),
+            'api_key'   => $this->config->getPass(),
+            'email'     => $email
         );
         return $this->callApi(
-            'bounces.delete.'.$this->config->getOutput(),
-            $params,
+            'invalidemails.delete.'.$this->config->getOutput(),
+            $param,
             Api::CALL_POST
         );
     }
 
     /**
-     * Shortcut to delete all bounces at once
+     * Pass an array of email addresses, each will be deleted
+     * an assoc array is returned with the addresses as key,
+     * the response of each delete call is the value
      * @param array $emailAddresses
      * @return array
      */
-    public function deleteAllBounces()
+    public function deleteEmails(array $emailAddresses)
     {
-        return $this->deletebounce(
-            array(
-                'delete_all'    => 1
-            )
+        $return = array_fill_keys(
+            $emailAddresses,
+            null
         );
+        foreach ($emailAddresses as $email) {
+            $return[$email] = $this->deleteEmail($email);
+        }
+        return $return;
     }
 
     /**
@@ -154,17 +145,6 @@ class Bounce extends Api
                     $v = $v->format('Y-m-d');
                 }
                 $sanitized[$name] = $v;
-            }
-        }
-        if (isset($sanitized['type'])) {
-            if  ($sanitized['type'] !== self::BOUNCE_TYPE_HARD && $sanitized['type'] !== self::BOUNCE_TYPE_SOFT) {
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        '%s is not a valid type, use %s::BOUNCE_TYPE_* constants',
-                        $sanitized['type'],
-                        __CLASS__
-                    )
-                );
             }
         }
         return $sanitized;
