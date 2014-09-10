@@ -1,7 +1,7 @@
 <?php
 namespace SendGrid;
 
-class Api
+abstract class Api
 {
     const CALL_GET = 'GET';
     const CALL_POST = 'POST';
@@ -32,6 +32,8 @@ class Api
         $this->config = $conf;
     }
 
+    abstract protected function sanitizeParams(array $params, $method);
+
     /**
      * @param null $key
      * @return array|string|int
@@ -57,6 +59,8 @@ class Api
     /**
      * @param $call
      * @param array $params
+     * @param string $method
+     * @return array|null|\stdClass|mixed
      */
     protected function callApi($call, array $params = array(), $method = self::CALL_GET)
     {
