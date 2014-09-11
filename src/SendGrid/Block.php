@@ -65,7 +65,7 @@ class Block extends Api
             __FUNCTION__
         );
         if (isset($param['type'])) {
-            if (!$param['type'] !== self::BLOCK_TYPE_HARD && $param['type'] !== self::BLOCK_TYPE_SOFT) {
+            if ($param['type'] !== self::BLOCK_TYPE_HARD && $param['type'] !== self::BLOCK_TYPE_SOFT) {
                 throw new \InvalidArgumentException(
                     sprintf(
                         '%s is an invalid block type, use %s::BLOCK_TYPE_* constants',
