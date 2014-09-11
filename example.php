@@ -14,10 +14,13 @@ $params = json_decode(
     ),true
 );
 $config = new Config($params);
+/** @var Bounce $api */
 $api = Api::GetApiSection(
     Api::API_BOUNCE,
     $config
 );
+
+/** @noinspection PhpToStringImplementationInspection */
 echo 'Bounce count: ',$api->getCount(array('type' => Bounce::BOUNCE_TYPE_SOFT), true), PHP_EOL;
 var_dump(
     $api->getBounces(
@@ -30,6 +33,7 @@ var_dump(
 
 $blockApi = new Block($config);
 
+/** @noinspection PhpToStringImplementationInspection */
 echo 'Block count: ', $blockApi->getCount(array(),true), PHP_EOL;
 var_dump(
     $blockApi->getBlocks(

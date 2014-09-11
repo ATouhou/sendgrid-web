@@ -107,15 +107,28 @@ class Bounce extends Api
 
     /**
      * Shortcut to delete all bounces at once
-     * @param array $emailAddresses
+     * @param array $params
      * @return array
      */
-    public function deleteAllBounces()
+    public function deleteAllBounces(array $params = array())
     {
+        if ($params) {
+            $params = $this->sanitizeParams(
+                $params,
+                str_replace(
+                    'All',
+                    '',
+                    __FUNCTION__
+                )
+            );
+            //email + delete_all makes no sense
+            if (isset($params['email'])) {
+                unset($params['email']);
+            }
+        }
+        $params['delete_all'] = 1;
         return $this->deletebounce(
-            array(
-                'delete_all'    => 1
-            )
+            $params
         );
     }
 

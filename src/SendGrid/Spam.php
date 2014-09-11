@@ -99,11 +99,26 @@ class Spam extends Api
 
     /**
      * Shortcut to deleteSpamReport(['delete_all' => 1]);
-     * @param array $emailAddresses
+     * @param array $params
      * @return array
      */
-    public function deleteAll()
+    public function deleteAllSpamReports(array $params = array())
     {
+        if ($params) {
+            $params = $this->sanitizeParams(
+                $params,
+                str_replace(
+                    'All',
+                    '',
+                    __FUNCTION__
+                )
+            );
+            //you cann't expect to pass a single email address, and call delete_all
+            if (isset($params['email'])) {
+                unset($params['email']);
+            }
+        }
+        $params['delete_all'] = 1;
         return $this->deleteSpamReports(
             array(
                 'delete_all'    => 1
