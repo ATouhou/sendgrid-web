@@ -2,7 +2,7 @@
     "name": "evodelavega/sendgrid-web",
     "description": "A simple API wrapper, focussed on sendgrid's web api",
     "license": "MIT",
-    "keywords": ["SendGrid", "sendgrid", "email", "web", "api", "statistics"],
+    "keywords": ["SendGrid", "sendgrid", "email", "web", "api", "statistics", "reports", "block", "bounce", "invalid"],
     "authors": [
         {
             "name": "Elias Van Ootegem",

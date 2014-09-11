@@ -10,6 +10,11 @@ abstract class Api
     const LAST_URL      = \CURLINFO_EFFECTIVE_URL;
     const CONTENT_TYPE  = \CURLINFO_CONTENT_TYPE;
 
+    const API_BLOCK = 1;
+    const API_BOUNCE = 2;
+    const API_INVALID = 3;
+    const API_SPAM = 4;
+
     /**
      * @var Config
      */
@@ -32,6 +37,43 @@ abstract class Api
         $this->config = $conf;
     }
 
+    /**
+     * Factory-like method, to make using this wrapper easier
+     * in (my) project
+     * @param int $section
+     * @param Config $conf
+     * @return Block|Bounce|Invalid|Spam
+     * @throws \InvalidArgumentException
+     */
+    public static function GetApiSection($section, Config $conf)
+    {
+        if ($section === self::API_BLOCK) {
+            return new Block($conf);
+        }
+        if ($section === self::API_BOUNCE) {
+            return new Bounce($conf);
+        }
+        if ($section === self::API_INVALID) {
+            return new Invalid($conf);
+        }
+        if ($section === self::API_SPAM) {
+            return new Spam($conf);
+        }
+        throw new \InvalidArgumentException(
+            sprintf(
+                '%s is not a valid API type, use %s::API_* constants',
+                $section,
+                __CLASS__
+            )
+        );
+    }
+
+    /**
+     * This method MUST be implemented, seeing as methods here assume arguments have been sanitized
+     * @param array $params
+     * @param string $method
+     * @return array
+     */
     abstract protected function sanitizeParams(array $params, $method);
 
     /**
