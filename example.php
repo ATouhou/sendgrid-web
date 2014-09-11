@@ -3,6 +3,7 @@ require 'src/SendGrid/Config.php';
 require 'src/SendGrid/Api.php';
 require 'src/SendGrid/Block.php';
 require 'src/SendGrid/Bounce.php';
+require 'src/SendGrid/Spam.php';
 use SendGrid\Config,
     SendGrid\Api,
     SendGrid\Block,
@@ -14,6 +15,18 @@ $params = json_decode(
     ),true
 );
 $config = new Config($params);
+$api = Api::GetApiSection(
+    Api::API_SPAM,
+    $config
+);
+echo 'Spam count: ', $api->getCount(array(), true), PHP_EOL;
+var_dump(
+    $api->getSpamReports(
+        array(
+            'limit' => 1
+        )
+    )
+);
 /** @var Bounce $api */
 $api = Api::GetApiSection(
     Api::API_BOUNCE,
@@ -25,8 +38,8 @@ echo 'Bounce count: ',$api->getCount(array('type' => Bounce::BOUNCE_TYPE_SOFT), 
 var_dump(
     $api->getBounces(
         array(
-            'type'  => Bounce::BOUNCE_TYPE_SOFT,
-            'limit' => 1
+            'type'  => Bounce::BOUNCE_TYPE_HARD,
+            'limit' => 10
         )
     )
 );
