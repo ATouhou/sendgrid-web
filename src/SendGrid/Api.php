@@ -103,6 +103,7 @@ abstract class Api
      * @param array $params
      * @param string $method
      * @return array|null|\stdClass|mixed
+     * @throws \RuntimeException
      */
     protected function callApi($call, array $params = array(), $method = self::CALL_GET)
     {
@@ -114,7 +115,14 @@ abstract class Api
         }
         $options = array(
             \CURLOPT_RETURNTRANSFER => true,
-            \CURLOPT_HEADER         => false
+            \CURLOPT_HEADER         => false,
+            \CURLOPT_ENCODING       => '',
+            \CURLOPT_SSL_VERIFYPEER => $this->config->getVerifySSL(),
+            \CURLOPT_USERPWD        => sprintf(
+                '%s:%s',
+                $params['api_user'],
+                $params['api_key']
+            )
         );
         $output = $this->config->getOutput();
         if (substr($call, -1*strlen($output)) !== $output) {
@@ -126,6 +134,10 @@ abstract class Api
                 $params
             );
         } else {
+            $options[\CURLOPT_HTTPHEADER] = array(
+                'expect:',
+                'user-agent: evodelavega-sendgrid/1.0;php'
+            );
             $options[\CURLOPT_POST] = true;
             $options[\CURLOPT_POSTFIELDS] = $params;
         }

@@ -22,6 +22,11 @@ class Config
     protected $pass = null;
 
     /**
+     * @var bool
+     */
+    protected $verifySSL = false;
+
+    /**
      * @var string
      */
     protected $output = self::OUTPUT_JSON;
@@ -57,6 +62,24 @@ class Config
         }
         $this->output = $output;
         return $this;
+    }
+
+    /**
+     * @param $bool
+     * @return $this
+     */
+    public function setVerifySSL($bool)
+    {
+        $this->verifySSL = (bool) $bool;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getVerifySSL()
+    {
+        return $this->verifySSL;
     }
 
     /**
