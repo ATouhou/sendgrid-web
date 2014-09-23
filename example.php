@@ -4,9 +4,11 @@ require 'src/SendGrid/Api.php';
 require 'src/SendGrid/Block.php';
 require 'src/SendGrid/Bounce.php';
 require 'src/SendGrid/Spam.php';
+require 'src/SendGrid/Invalid.php';
 use SendGrid\Config,
     SendGrid\Api,
     SendGrid\Block,
+    SendGrid\Invalid,
     SendGrid\Bounce;
 
 $params = json_decode(
@@ -15,6 +17,34 @@ $params = json_decode(
     ),true
 );
 $config = new Config($params);
+$api = Api::GetApiSection(
+    Api::API_INVALID,
+    $config
+);
+echo 'Invalid count: ', $api->getCount(array(), true), PHP_EOL;
+$invalid = $api->getInvalids(
+    array(
+        'limit' => 1
+    )
+);
+$emails = array();
+foreach ($invalid as $obj)
+{
+    $emails[] = $obj->email;
+    echo 'Will delete: ', $obj->email, PHP_EOL;
+}
+var_dump(
+    $api->deleteEmails(
+        $emails
+    )
+);
+var_dump(
+    $api->getInvalids(
+        array(
+            'limit' => 1
+        )
+    )
+);
 $api = Api::GetApiSection(
     Api::API_SPAM,
     $config
