@@ -5,9 +5,13 @@ require 'src/SendGrid/Block.php';
 require 'src/SendGrid/Bounce.php';
 require 'src/SendGrid/Spam.php';
 require 'src/SendGrid/Invalid.php';
+require 'src/SendGrid/Model/Email.php';
+require 'src/SendGrid/Email.php';
 use SendGrid\Config,
     SendGrid\Api,
     SendGrid\Block,
+    SendGrid\Model\Email as EModel,
+    SendGrid\Email,
     SendGrid\Invalid,
     SendGrid\Bounce;
 
@@ -17,6 +21,34 @@ $params = json_decode(
     ),true
 );
 $config = new Config($params);
+$email = Api::GetApiSection(
+    Api::API_EMAIL,
+    $config
+);
+if (!$email instanceof Email) {
+    throw new \RuntimeException(
+        'Failed to get email API'
+    );
+}
+$toAddr = isset($params['sendTo']) ? $params['sendTo'] : 'foo@bar.zar';
+$message = new EModel();
+$message->addTo(
+        $toAddr
+    )->setFrom(
+        $toAddr
+    )->setSubject(
+        'This is an API test'
+    )->setText(
+        'This is the text body'
+    )->setHtml(
+        '<h1>Test!</h1><p>If you see this, it worked</p>'
+    );
+var_dump(
+    $email->sendMail(
+        $message
+    )
+);
+exit();
 $api = Api::GetApiSection(
     Api::API_INVALID,
     $config

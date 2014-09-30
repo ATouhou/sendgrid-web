@@ -14,6 +14,7 @@ abstract class Api
     const API_BOUNCE = 2;
     const API_INVALID = 3;
     const API_SPAM = 4;
+    const API_EMAIL = 5;
 
     /**
      * @var Config
@@ -58,6 +59,9 @@ abstract class Api
         }
         if ($section === self::API_SPAM) {
             return new Spam($conf);
+        }
+        if ($section === self::API_EMAIL) {
+            return new Email($conf);
         }
         throw new \InvalidArgumentException(
             sprintf(

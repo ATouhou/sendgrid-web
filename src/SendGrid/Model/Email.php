@@ -144,7 +144,7 @@ class Email
     /**
      * @return array
      */
-    public function getSection()
+    public function getSections()
     {
         return $this->sections;
     }
