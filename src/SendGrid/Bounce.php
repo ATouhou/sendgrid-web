@@ -118,7 +118,10 @@ class Bounce extends Api
                 str_replace(
                     'All',
                     '',
-                    __FUNCTION__
+                    substr(
+                        __FUNCTION__,
+                        0,-1
+                    )
                 )
             );
             //email + delete_all makes no sense
