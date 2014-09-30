@@ -119,7 +119,7 @@ class Invalid extends Api
     protected function sanitizeParams(array $params, $method)
     {
         //first, make sure required params are set
-        if (static::$RequiredParams[$method]) {
+        if (isset(static::$RequiredParams[$method])) {
             foreach  (static::$RequiredParams[$method] as $param) {
                 if(!isset($params[$param])) {
                     throw new \InvalidArgumentException(

@@ -93,7 +93,7 @@ class Email
     }
 
     /**
-     * @param \stdClass $obj
+     * @param \stdClass|array|\Traversable $obj
      * @return $this
      */
     public function bulkSetter($obj)
